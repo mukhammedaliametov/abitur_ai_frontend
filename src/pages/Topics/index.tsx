@@ -6,7 +6,6 @@ import {
   IconLock,
   IconPlayerPlay,
   IconArrowRight,
-  IconMathFunction,
 } from '@tabler/icons-react';
 
 const topicsList = [

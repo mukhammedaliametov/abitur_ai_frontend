@@ -154,7 +154,7 @@ export const Aside = () => {
                       <div className="flex items-center gap-2.5">
                         <Icon
                           size={17}
-                          style={{ color: isActive ? 'var(--teal)' : 'var(--text3)', flexShrink: 0 }}
+                          // style={{ color: isActive ? 'var(--teal)' : 'var(--text3)', flexShrink: 0 }}
                         />
                         <span>{item.title}</span>
                       </div>

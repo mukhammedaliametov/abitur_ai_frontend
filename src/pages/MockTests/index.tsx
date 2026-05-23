@@ -1,13 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  IconClipboardCheck,
   IconClock,
   IconStar,
   IconListNumbers,
   IconCheck,
   IconX,
   IconArrowRight,
-  IconArrowLeft,
   IconPlayerPlay,
   IconBrain,
   IconRefresh,
