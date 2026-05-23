@@ -5,6 +5,14 @@ import PrivateRoute from "../../pages/Auth/Private/PrivateRoute";
 import MainLayout from "../../layouts/MainLayout";
 import Dashboard from "../../pages/Dashboard";
 import NotFound from "../../pages/NotFound";
+import Subjects from "../../pages/Subjects";
+import Topics from "../../pages/Topics";
+import MockTests from "../../pages/MockTests";
+import Lessons from "../../pages/Lessons";
+import AITutor from "../../pages/AITutor";
+import Progress from "../../pages/Progress";
+import Leaderboard from "../../pages/LeaderBoard";
+import History from "../../pages/History";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +32,15 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: "dashboard", element: <Dashboard /> }
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "subjects", element: <Subjects /> },
+      { path: "topics", element: <Topics /> },
+      { path: "mock testlar", element: <MockTests /> },
+      { path: "AI tutor", element: <AITutor /> },
+      { path: "darsliklar", element: <Lessons /> },
+      { path: "progress", element: <Progress /> },
+      { path: "leaderboard", element: <Leaderboard /> },
+      { path: "history", element: <History /> }
     ],
   },
   {
