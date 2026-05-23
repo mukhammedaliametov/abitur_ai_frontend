@@ -1,23 +1,20 @@
-import React from 'react';
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  FileText, 
-  ClipboardCheck, 
-  Bot, 
-  BookMarked, 
-  BarChart3, 
-  Trophy, 
-  History 
-} from 'lucide-react';
+import { useLocation, Link } from 'react-router-dom';
+import {
+  IconLayoutDashboard,
+  IconBooks,
+  IconClipboardList,
+  IconClipboardCheck,
+  IconBrain,
+  IconBook,
+  IconChartBar,
+  IconTrophy,
+  IconHistory,
+} from '@tabler/icons-react';
 
-// ==========================================
-// 1. INTERFACELAR VA MA'LUMOTLAR (DATA)
-// ==========================================
 interface SidebarItem {
   title: string;
   path: string;
-  icon: any;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   badge?: number;
 }
 
@@ -30,107 +27,193 @@ const sidebarMenuGroups: SidebarSection[] = [
   {
     sectionTitle: "ASOSIY",
     items: [
-      { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-      { title: "Fanlar", path: "/subjects", icon: BookOpen },
-      { title: "Mavzular", path: "/topics", icon: FileText },
-    ]
+      { title: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard },
+      { title: "Fanlar", path: "/subjects", icon: IconBooks },
+      { title: "Mavzular", path: "/topics", icon: IconClipboardList },
+    ],
   },
   {
     sectionTitle: "O'QISH",
     items: [
-      { title: "Mock testlar", path: "/mock testlar", icon: ClipboardCheck },
-      { title: "AI Tutor", path: "/AI tutor", icon: Bot },
-      { title: "Darsliklar", path: "/darsliklar", icon: BookMarked },
-    ]
+      { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck },
+      { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain },
+      { title: "Darsliklar", path: "/darsliklar", icon: IconBook },
+    ],
   },
   {
     sectionTitle: "TAHLIL",
     items: [
-      { title: "Progress", path: "/progress", icon: BarChart3 },
-      { title: "Leaderboard", path: "/leaderboard", icon: Trophy },
-      { title: "Tarix", path: "/history", icon: History, badge: 3 },
-    ]
-  }
+      { title: "Progress", path: "/progress", icon: IconChartBar },
+      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy },
+      { title: "Tarix", path: "/history", icon: IconHistory, badge: 3 },
+    ],
+  },
 ];
 
-// ==========================================
-// 2. ASOSIY SIDEBAR KOMPONENTI (UI)
-// ==========================================
-export const Aside: React.FC = () => {
-  const currentPath = "/dashboard"; // Test uchun dashboardni faol ushlaymiz
+export const Aside = () => {
+  const location = useLocation();
 
   return (
-    <aside className="w-64 h-screen bg-[#0d121f] text-gray-400 flex flex-col justify-between border-r border-gray-800 font-sans select-none text-left box-border">
-      
-      {/* Yuqori va Markaziy qism */}
-      <div className="flex flex-col justify-start items-start text-left w-full">
-        
+    <aside
+      className="flex flex-col justify-between select-none"
+      style={{
+        width: 220,
+        minHeight: '100vh',
+        background: 'var(--bg2)',
+        borderRight: '1px solid var(--border)',
+        flexShrink: 0,
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
+      }}
+    >
+      <div>
         {/* Logo */}
-        <div className="p-5 flex items-center justify-start gap-3 w-full text-left">
-          <div className="w-10 h-10 bg-[#00bda5] rounded-xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-            ☘️
+        <div
+          className="flex items-center gap-2.5"
+          style={{ padding: '22px 20px 20px', borderBottom: '1px solid var(--border)' }}
+        >
+          <div
+            className="flex items-center justify-center"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: 'var(--teal)',
+            }}
+          >
+            <IconBrain size={16} color="#07090F" />
           </div>
-          <span className="text-white font-bold text-xl tracking-wide text-left">AbiturAI</span>
+          <span className="font-semibold" style={{ fontSize: 16, color: 'var(--text)', letterSpacing: '-0.3px' }}>
+            AbiturAI
+          </span>
         </div>
 
-        {/* Menyu Navigatsiyasi */}
-        <div className="w-full overflow-y-auto px-3 py-2 space-y-6 text-left flex flex-col justify-start items-start">
+        {/* Menu */}
+        <div className="flex flex-col gap-5" style={{ padding: '0 12px' }}>
           {sidebarMenuGroups.map((group, groupIdx) => (
-            <div key={groupIdx} className="space-y-1 text-left w-full flex flex-col justify-start items-start">
-              
-              {/* Sarlavhalar (ASOSIY, O'QISH, TAHLIL) */}
-              <h3 className="px-3 text-xs font-semibold text-gray-500 tracking-wider mb-2 text-left block w-full">
+            <div key={groupIdx}>
+              <div
+                className="uppercase font-semibold"
+                style={{
+                  padding: '20px 12px 8px',
+                  fontSize: 10,
+                  color: 'var(--text3)',
+                  letterSpacing: '0.1em',
+                }}
+              >
                 {group.sectionTitle}
-              </h3>
-              
-              {/* Linklar */}
-              <div className="space-y-1 text-left w-full flex flex-col justify-start items-start">
-                {group.items.map((item, itemIdx) => {
+              </div>
+              <div className="flex flex-col gap-0.5">
+                {group.items.map((item) => {
                   const Icon = item.icon;
-                  const isActive = currentPath === item.path;
+                  const isActive = location.pathname === item.path;
 
                   return (
-                    <a
-                      key={itemIdx}
-                      href={item.path}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group text-[15px] font-medium w-full text-left
-                        ${isActive 
-                          ? 'bg-[#122528] text-[#00bda5] border-l-4 border-[#00bda5] rounded-l-none' 
-                          : 'hover:bg-[#141b2d] hover:text-gray-200'
-                        }`}
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className="flex items-center justify-between relative no-underline"
+                      style={{
+                        padding: '9px 12px',
+                        borderRadius: 'var(--r-sm)',
+                        fontSize: 13,
+                        color: isActive ? 'var(--teal)' : 'var(--text2)',
+                        background: isActive ? 'var(--teal-dim)' : 'transparent',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        gap: 10,
+                        textDecoration: 'none',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.background = 'var(--bg3)';
+                          e.currentTarget.style.color = 'var(--text)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.background = 'transparent';
+                          e.currentTarget.style.color = 'var(--text2)';
+                        }
+                      }}
                     >
-                      <div className="flex items-center justify-start gap-3 text-left">
-                        <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-[#00bda5]' : 'text-gray-500 group-hover:text-gray-300'}`} />
-                        <span className="text-left">{item.title}</span>
+                      {isActive && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 6,
+                            bottom: 6,
+                            width: 2,
+                            background: 'var(--teal)',
+                            borderRadius: '0 2px 2px 0',
+                          }}
+                        />
+                      )}
+                      <div className="flex items-center gap-2.5">
+                        <Icon
+                          size={17}
+                          style={{ color: isActive ? 'var(--teal)' : 'var(--text3)', flexShrink: 0 }}
+                        />
+                        <span>{item.title}</span>
                       </div>
-                      
-                      {/* Badge (Bildirishnoma soni) */}
                       {item.badge && (
-                        <span className="bg-[#e04f5f]/20 text-[#e04f5f] text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0">
+                        <span
+                          className="font-semibold"
+                          style={{
+                            background: 'var(--red-dim)',
+                            color: 'var(--red)',
+                            fontSize: 10,
+                            padding: '2px 7px',
+                            borderRadius: 20,
+                          }}
+                        >
                           {item.badge}
                         </span>
                       )}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
-
             </div>
           ))}
         </div>
       </div>
 
-      {/* Pastki qism: Profil */}
-      <div className="p-4 border-t border-gray-800 bg-[#0a0e1a] flex items-center justify-start gap-3 w-full text-left">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-inner flex-shrink-0">
-          K
-        </div>
-        <div className="flex flex-col text-left justify-center items-start">
-          <span className="text-white font-semibold text-sm leading-tight text-left">Kumush</span>
-          <span className="text-gray-500 text-xs mt-0.5 text-left">Standart plan</span>
+      {/* User Profile */}
+      <div
+        className="flex items-center gap-2.5 cursor-pointer"
+        style={{
+          padding: '12px',
+          borderTop: '1px solid var(--border)',
+          background: 'var(--bg)',
+        }}
+      >
+        <div
+          className="flex items-center gap-2.5"
+          style={{ padding: 10, borderRadius: 'var(--r-sm)', transition: 'background 0.15s', width: '100%' }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg3)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <div
+            className="flex items-center justify-center font-semibold text-white flex-shrink-0"
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--teal), var(--purple))',
+              fontSize: 13,
+            }}
+          >
+            K
+          </div>
+          <div>
+            <div className="font-medium" style={{ fontSize: 13, color: 'var(--text)' }}>Kumush</div>
+            <div style={{ fontSize: 11, color: 'var(--text3)' }}>Standart plan</div>
+          </div>
         </div>
       </div>
-
     </aside>
   );
 };

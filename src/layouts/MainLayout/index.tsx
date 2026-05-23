@@ -4,8 +4,12 @@ import { Outlet } from 'react-router-dom'
 const MainLayout = () => {
   return (
     <>
+      <div className="flex h-screen overflow-hidden">
       <Aside />
-      <Outlet />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Outlet />
+      </div>
+    </div>
     </>
   )
 }
