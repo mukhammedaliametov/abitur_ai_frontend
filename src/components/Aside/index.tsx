@@ -46,7 +46,7 @@ const sidebarMenuGroups: SidebarSection[] = [
     items: [
       { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck, roles: ['student'] },
       { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain, roles: ['student', 'teacher'] },
-      { title: "Darsliklar", path: "/darsliklar", icon: IconBook, roles: ['student'] },
+      { title: "Feynman usuli", path: "/darsliklar", icon: IconBook, roles: ['student'] },
     ],
   },
   {
@@ -67,7 +67,7 @@ const sidebarMenuGroups: SidebarSection[] = [
     sectionTitle: "TAHLIL",
     items: [
       { title: "Progress", path: "/progress", icon: IconChartBar, roles: ['student'] },
-      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy, roles: ['student'] },
+      { title: "Natijalarim", path: "/leaderboard", icon: IconTrophy, roles: ['student'] },
       { title: "Tarix", path: "/history", icon: IconHistory, roles: ['student'] },
     ],
   },
