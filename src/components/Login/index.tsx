@@ -1,81 +1,101 @@
 import { message } from 'antd';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '12px 14px',
+  background: 'var(--bg3)',
+  border: '1px solid var(--border)',
+  borderRadius: 'var(--r-sm)',
+  color: 'var(--text)',
+  fontSize: 14,
+  outline: 'none',
+  transition: 'border-color 0.2s',
+};
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    const username = formData.username.trim();
-    const password = formData.password.trim();
-
-    const users = [
-      {
-        user: 'admin',
-        pass: '12345',
-        role: 'admin',
-      },
-      {
-        user: 'teacher',
-        pass: '12345',
-        role: 'teacher',
-      },
-      {
-        user: 'student',
-        pass: '12345',
-        role: 'student',
-      },
-    ];
-
-    const foundUser = users.find(
-      (u) => u.user === username && u.pass === password
-    );
-
-    if (foundUser) {
-      localStorage.setItem('is_auth', 'true');
-      localStorage.setItem('role_name', foundUser.role);
-
+    try {
+      await login({
+        email: formData.email.trim(),
+        password: formData.password,
+      });
       message.success('Tizimga xush kelibsiz!');
-
-      window.location.reload();
-    } else {
-      message.error('Login yoki parol xato!');
+      navigate('/', { replace: true });
+    } catch {
+      message.error('Email yoki parol xato!');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-3">
-      <h2 className="text-2xl font-bold">Kirish</h2>
+    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div>
+        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>Kirish</div>
+        <div style={{ fontSize: 13, color: 'var(--text3)' }}>AbiturAI hisobingizga kiring</div>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Login"
-        className="w-full p-3 bg-transparent border border-gray-700 rounded-lg outline-none focus:border-blue-500 transition"
-        onChange={(e) =>
-          setFormData({ ...formData, username: e.target.value })
-        }
-        required
-      />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <label style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 500 }}>Email</label>
+        <input
+          type="email"
+          placeholder="sizning@email.com"
+          value={formData.email}
+          style={inputStyle}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--teal)'; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; }}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          required
+        />
+      </div>
 
-      <input
-        type="password"
-        placeholder="Parol"
-        className="w-full p-3 bg-transparent border border-gray-700 rounded-lg outline-none focus:border-blue-500 transition"
-        onChange={(e) =>
-          setFormData({ ...formData, password: e.target.value })
-        }
-        required
-      />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <label style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 500 }}>Parol</label>
+        <input
+          type="password"
+          placeholder="Parolingiz"
+          value={formData.password}
+          style={inputStyle}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--teal)'; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; }}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          required
+        />
+      </div>
 
       <button
         type="submit"
-        className="w-full p-3 bg-blue-600 rounded cursor-pointer text-white font-semibold hover:bg-blue-700 transition"
+        disabled={isSubmitting}
+        style={{
+          width: '100%',
+          padding: '12px 0',
+          background: 'var(--teal)',
+          color: '#07090F',
+          fontSize: 14,
+          fontWeight: 700,
+          border: 'none',
+          borderRadius: 'var(--r-sm)',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
+          opacity: isSubmitting ? 0.6 : 1,
+          transition: 'opacity 0.2s',
+          marginTop: 4,
+        }}
       >
-        Kirish
+        {isSubmitting ? 'Kirilmoqda...' : 'Kirish'}
       </button>
     </form>
   );

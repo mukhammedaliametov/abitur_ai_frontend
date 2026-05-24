@@ -1,4 +1,4 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import {
   IconLayoutDashboard,
   IconBooks,
@@ -9,13 +9,20 @@ import {
   IconChartBar,
   IconTrophy,
   IconHistory,
+  IconLogout,
+  IconUsers,
+  IconFileText,
+  IconServer,
 } from '@tabler/icons-react';
+import { message } from 'antd';
+import { useAuth } from '../../hooks/useAuth';
 
 interface SidebarItem {
   title: string;
   path: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   badge?: number;
+  roles?: Array<'student' | 'teacher' | 'admin'>;
 }
 
 interface SidebarSection {
@@ -27,31 +34,59 @@ const sidebarMenuGroups: SidebarSection[] = [
   {
     sectionTitle: "ASOSIY",
     items: [
-      { title: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard },
-      { title: "Fanlar", path: "/subjects", icon: IconBooks },
-      { title: "Mavzular", path: "/topics", icon: IconClipboardList },
+      { title: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard, roles: ['student'] },
+      { title: "Dashboard", path: "/teacher-dashboard", icon: IconLayoutDashboard, roles: ['teacher'] },
+      { title: "Dashboard", path: "/admin-dashboard", icon: IconLayoutDashboard, roles: ['admin'] },
+      { title: "Fanlar", path: "/subjects", icon: IconBooks, roles: ['student', 'admin'] },
+      { title: "Mavzular", path: "/topics", icon: IconClipboardList, roles: ['student', 'admin'] },
     ],
   },
   {
     sectionTitle: "O'QISH",
     items: [
-      { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck },
-      { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain },
-      { title: "Darsliklar", path: "/darsliklar", icon: IconBook },
+      { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck, roles: ['student'] },
+      { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain, roles: ['student', 'teacher'] },
+      { title: "Darsliklar", path: "/darsliklar", icon: IconBook, roles: ['student'] },
+    ],
+  },
+  {
+    sectionTitle: "O'QITUVCHI",
+    items: [
+      { title: "Talabalar", path: "/teacher-dashboard", icon: IconUsers, roles: ['teacher'] },
+      { title: "Kontent", path: "/teacher-dashboard", icon: IconFileText, roles: ['teacher'] },
+    ],
+  },
+  {
+    sectionTitle: "BOSHQARUV",
+    items: [
+      { title: "Foydalanuvchilar", path: "/admin-dashboard", icon: IconUsers, roles: ['admin'] },
+      { title: "Tizim", path: "/admin-dashboard", icon: IconServer, roles: ['admin'] },
     ],
   },
   {
     sectionTitle: "TAHLIL",
     items: [
-      { title: "Progress", path: "/progress", icon: IconChartBar },
-      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy },
-      { title: "Tarix", path: "/history", icon: IconHistory, badge: 3 },
+      { title: "Progress", path: "/progress", icon: IconChartBar, roles: ['student'] },
+      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy, roles: ['student'] },
+      { title: "Tarix", path: "/history", icon: IconHistory, roles: ['student'] },
     ],
   },
 ];
 
 export const Aside = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const role = user?.role ?? 'student';
+  const fullName = user ? `${user.firstname} ${user.lastname}`.trim() : 'AbiturAI';
+  const initials = user ? `${user.firstname[0] ?? ''}${user.lastname[0] ?? ''}`.toUpperCase() : 'A';
+  const roleLabel = role === 'admin' ? 'Admin' : role === 'teacher' ? "O'qituvchi" : "O'quvchi";
+
+  const handleLogout = async () => {
+    await logout();
+    message.success('Tizimdan chiqildi');
+    navigate('/login', { replace: true });
+  };
 
   return (
     <aside
@@ -105,7 +140,7 @@ export const Aside = () => {
                 {group.sectionTitle}
               </div>
               <div className="flex flex-col gap-0.5">
-                {group.items.map((item) => {
+                {group.items.filter((item) => !item.roles || item.roles.includes(role)).map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
 
@@ -183,7 +218,7 @@ export const Aside = () => {
 
       {/* User Profile */}
       <div
-        className="flex items-center gap-2.5 cursor-pointer"
+        className="flex items-center gap-2.5"
         style={{
           padding: '12px',
           borderTop: '1px solid var(--border)',
@@ -206,12 +241,19 @@ export const Aside = () => {
               fontSize: 13,
             }}
           >
-            K
+            {initials || 'A'}
           </div>
-          <div>
-            <div className="font-medium" style={{ fontSize: 13, color: 'var(--text)' }}>Kumush</div>
-            <div style={{ fontSize: 11, color: 'var(--text3)' }}>Standart plan</div>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div className="font-medium" style={{ fontSize: 13, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fullName}</div>
+            <div style={{ fontSize: 11, color: 'var(--text3)' }}>{roleLabel}</div>
           </div>
+          <button
+            onClick={handleLogout}
+            title="Chiqish"
+            style={{ width: 30, height: 30, borderRadius: 'var(--r-sm)', border: '1px solid var(--border)', background: 'var(--bg2)', color: 'var(--text3)', display: 'grid', placeItems: 'center', cursor: 'pointer', flexShrink: 0 }}
+          >
+            <IconLogout size={15} />
+          </button>
         </div>
       </div>
     </aside>
