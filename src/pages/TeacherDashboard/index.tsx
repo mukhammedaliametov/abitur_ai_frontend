@@ -102,10 +102,10 @@ const TeacherDashboard = () => {
               <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>Mavzular bo'yicha natijalar</div>
             </div>
             <div style={{ padding: '8px 0' }}>
-              {analytics?.topic_scores.length === 0 && (
+              {(!analytics?.topic_scores || analytics.topic_scores.length === 0) && (
                 <div style={{ padding: 20, textAlign: 'center', color: 'var(--text3)', fontSize: 13 }}>Hali test natijalari yo'q</div>
               )}
-              {analytics?.topic_scores.map((ts) => {
+              {(Array.isArray(analytics?.topic_scores) ? analytics.topic_scores : []).map((ts) => {
                 const scoreColor = ts.avg_score >= 70 ? 'var(--green)' : ts.avg_score >= 40 ? 'var(--amber)' : 'var(--red)';
                 return (
                   <div key={ts.topic_id} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border)' }}>
@@ -129,10 +129,10 @@ const TeacherDashboard = () => {
               <IconTrophy size={18} style={{ color: 'var(--amber)' }} />
             </div>
             <div style={{ padding: '8px 0' }}>
-              {analytics?.student_rankings.length === 0 && (
+              {(!analytics?.student_rankings || analytics.student_rankings.length === 0) && (
                 <div style={{ padding: 20, textAlign: 'center', color: 'var(--text3)', fontSize: 13 }}>Hali natijalar yo'q</div>
               )}
-              {analytics?.student_rankings.map((sr, i) => (
+              {(Array.isArray(analytics?.student_rankings) ? analytics.student_rankings : []).map((sr, i) => (
                 <div key={sr.user_id} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 12, borderBottom: '1px solid var(--border)' }}>
                   <div style={{
                     width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0,

@@ -204,10 +204,15 @@ const Dashboard = () => {
     loadDashboard();
   }, []);
 
+  const safeSubjects = Array.isArray(data?.subjects_progress) ? data.subjects_progress : [];
+  const safeRecommendations = Array.isArray(data?.recommendations) ? data.recommendations : [];
+  const safeAttempts = Array.isArray(data?.recent_attempts) ? data.recent_attempts : [];
+  const safeCalendar = Array.isArray(data?.streak_calendar) ? data.streak_calendar : [];
+
   const avgSubjects = useMemo(() => {
-    if (!data?.subjects_progress.length) return 0;
-    return Math.round(data.subjects_progress.reduce((sum, subject) => sum + subject.percentage, 0) / data.subjects_progress.length);
-  }, [data]);
+    if (!safeSubjects.length) return 0;
+    return Math.round(safeSubjects.reduce((sum, subject) => sum + subject.percentage, 0) / safeSubjects.length);
+  }, [safeSubjects]);
 
   if (isLoading) {
     return <div style={{ flex: 1, display: 'grid', placeItems: 'center', color: 'var(--text2)' }}>Dashboard yuklanmoqda...</div>;
@@ -244,16 +249,16 @@ const Dashboard = () => {
           <StatCard label="Fanlar progressi" value={`${avgSubjects}%`} color="var(--red)" icon={<IconTargetArrow size={19} />} />
         </div>
 
-        <SubjectsGrid subjects={data.subjects_progress} />
+        <SubjectsGrid subjects={safeSubjects} />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 18 }}>
-          <RecommendationsList recommendations={data.recommendations} />
+          <RecommendationsList recommendations={safeRecommendations} />
           <DashboardChat />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 18 }}>
-          <RecentTests attempts={data.recent_attempts} />
-          <StreakCalendar days={data.streak_calendar} />
+          <RecentTests attempts={safeAttempts} />
+          <StreakCalendar days={safeCalendar} />
         </div>
       </div>
     </div>
