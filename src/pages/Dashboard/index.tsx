@@ -162,7 +162,7 @@ function DashboardChat() {
         {answer || "Savol yozing, Tutor qisqa javob beradi."}
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <input value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && ask()} placeholder="Masalan: diskriminant nima?" style={{ flex: 1, background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', padding: '10px 12px', color: 'var(--text)', outline: 'none' }} />
+        <input value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && ask()} placeholder="Masalan: logarifm nima?" style={{ flex: 1, background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', padding: '10px 12px', color: 'var(--text)', outline: 'none' }} />
         <button onClick={ask} disabled={!question.trim() || isSending} style={{ width: 42, border: 0, borderRadius: 'var(--r-sm)', background: 'var(--purple)', color: '#fff', display: 'grid', placeItems: 'center', cursor: question.trim() ? 'pointer' : 'not-allowed', opacity: question.trim() ? 1 : 0.5 }}>
           <IconSend size={17} />
         </button>
